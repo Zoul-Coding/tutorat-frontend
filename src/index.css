@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* @font-face {
+  font-family: 'Times New Roman';
+  src: url('/public/Fonts/times-new-roman.ttf') format('truetype');
+  font-style: normal;
+  font-display: swap;
+} */
+
+@layer base {
+  :root {
+    --gradient: linear-gradient(90deg, #ff914d, #ab003e);
+    --marron-fonce: #6f3434;
+    --rose-pale: #fae8e7;
+    --rose-clair: #fef5f4;
+    --rose-ancien: #d0b0af;
+    --rouge-brique: #B05A59;
+    --background: #F6F6F6;
+    --linear: #ff8a00;
+    --bordure-input: #FFA66E;
+    --background-1: #9E3D3C;
+    --background-2: #9E3D3C;
+    --background-3: #b1867f;
+    --background-4: #96584e;
+  }
+}
+
+  .border-gradient {
+    border: 4px solid transparent;
+  border-radius: 20px;
+  background: 
+  linear-gradient(to right, white, white), 
+  linear-gradient(to right, #ff914d , #ab003e); 
+  background-clip: padding-box, border-box;
+  background-origin: padding-box, border-box;
+  }
+
+body {
+  /*  background: var( --background); */
+  /*  font-family: 'Times New Roman', serif; */
+  font-family: 'Poppins', sans-serif;
+}
+
+.mySwiper .swiper-slide img {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.mySwiper .swiper-slide-thumb-active img {
+  opacity: 1;
+  border: 3px solid var(--linear);
+}
+.rotating-words {
+  display: inline-block;
+  transition: background-position 0.8s ease-in-out;
+}
+
+.input-phone-number {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #e2e0e0;
+  background-color: #fbf9f9;
+  border-radius: 5px;
+  padding: 0 15px;
+}
+.input-phone-number input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+  background-color: #fbf9f9;
+}
+
+.input-phone-number-1 {
+  width: 100%;
+  height: 55%;
+  border: 1px solid #cbcaca;
+/*   background-color: #fbf9f9; */
+  border-radius: 5px;
+  padding: 0 15px;
+}
+.input-phone-number-1 input {
+  width: 100%;
+  height: 100%;
+  outline: none;
+  border: none;
+ /*  background-color: #fbf9f9; */
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  width: 30px; /* Réduit la largeur */
+  height: 30px; /* Réduit la hauteur */
+  font-size: 14px; /* Réduit la taille de l'icône */
+  color: white;
+}
+
+/* Optionnel : ajuster la taille de l'icône */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  font-size: 16px; /* Ajuste l'icône par défaut */
+}
+
+
+.bar-overflow::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.bar-overflow::-webkit-scrollbar-track {
+  background: red;
+  border-radius: 10px;
+}
+
+.bar-overflow::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
