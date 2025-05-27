@@ -1,33 +1,18 @@
+import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
-import CategorySection from "@/components/CategorySection";
-import ProductService from "@/components/ProductService";
-import ReviewTestimonial from "@/components/ReviewTestimonial";
-import Evenment from "@/components/Evenment";
-import Service from "@/components/Service";
-import Jointhecommunity from "@/components/Jointhecommunity";
-import Footer from "@/components/Footer";
-import { getToken } from "@/lib/utils";
+import Challenge from "@/components/Challenge";
+import Tutors from "@/components/Tutors";
+import CustomerReview from "@/components/CustomerReview";
 
 function Home() {
-  const user = getToken();
   return (
-    <div>
-      <HeroSection />
-      <CategorySection />
-      <ProductService />
-     {/*  <ReviewTestimonial /> */}
-      <Evenment />
-      {user == null ? (
-        <div>
-          <Service />
-          <Jointhecommunity />
-        </div>
-      ) : (
-        ""
-      )}
-      {/*   <Service />
-        <Jointhecommunity /> */}
-    </div>
+    <>
+     <Header />
+     <HeroSection />
+     <Challenge />
+     <Tutors />
+     <CustomerReview />
+    </>
   );
 }
 

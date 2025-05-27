@@ -1,41 +1,111 @@
-import { Link } from "react-router-dom";
-import EntrepreurProfile from "./EntrepreurProfile";
-import { getToken } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, Controller } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const HeroSection = () => {
-  const user = getToken();
+  const navigate = useNavigate();
+
+  const formSchema = z.object({
+    search: z.string(),
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      search: "",
+    },
+  });
+
+  async function onSubmit(values: any) {
+    try {
+      const redirectURL = "/recherche";
+      navigate(`${redirectURL}?search=${values.search}`);
+      form.reset();
+    } catch (err) {}
+  }
+
+  const handleKeyDown = (event: any) => {
+    if (event.key === "Enter") {
+      form.handleSubmit(onSubmit);
+    }
+  };
 
   return (
-    <section>
-      <div className="bg-background flex flex-col md:gap-6 gap-6 justify-center items-center md:px-0 px-5 md:pt-64 pt-32 pb-60">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-marronFonce md:px-28 px-5 font-passionOne font-[400] text-center md:text-[93px] text-4xl md:leading-[93px] uppercase">
-            {/* Le cercle des entreprises chrétiennes */}
-            Tous les artistes, entreprises et associations francophones gérées par des chrétiens
+    <section className="md:pt-28 pt-20 xl:px-0 px-2">
+      <div className="max-w-screen-xl mx-auto bg-hero-gradient rounded-3xl bg-cover w-full xl:px-0 px-6 md:py-16 py-10">
+        <div className="flex flex-col justify-center items-center gap-6 text-center">
+          <h1 className="text-white font-bold md:text-5xl text-3xl md:w-[50%]">
+            Trouve le bon tuteur pour réussir !︎
           </h1>
-          <p className="font-poppins md:px-56 px-5 md:text-[20px] text-[18px] text-center font-normal leading-[33px]">
-            Trouvez facilement un professionnel pour tous vos besoins ou Donnez
-            de la visibilité à votre entreprise
+          <p className="text-gray-400 md:text-base text-sm md:w-[40%]">
+            Rejoins une communauté d’élèves et de parents à la recherche de
+            tuteurs qualifiés. Trouve un accompagnement personnalisé selon la
+            matière, la localisation et la disponibilité des tuteurs.
           </p>
         </div>
-        <div className="flex sm:flex-row flex-col gap-6 items-center">
-          <Link
-            to="/annuaire"
-            className="bg-marronFonce font-poppins text-white font-[700] rounded md:text-base text-sm md:px-6 px-4 py-3 hover:opacity-85"
-          >
-            Trouvez une entreprise
-          </Link>
-          {user ? null : (
-            <Link
-              to="/inscription"
-              className="bg-custom-gradient font-poppins text-white font-[700] rounded md:text-base text-sm md:px-6 px-4 py-3 hover:opacity-85"
+        <div className="pt-12">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="max-w-screen-sm mx-auto flex md:flex-row flex-col items-center gap-4 bg-white rounded-xl px-4 py-4"
             >
-              S'inscrire
-            </Link>
-          )}
+              <div className="flex md:flex-row flex-col items-center gap-4 w-full">
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="search"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            /* onKeyDown={handleKeyDown} */
+                            className="w-full h-12 border-gray-400 border-2 text-base focus:outline-none focus:shadow-none leading-[20.16px] rounded-xl"
+                            placeholder="Matière"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full">
+                  <FormField
+                    control={form.control}
+                    name="search"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            /* onKeyDown={handleKeyDown} */
+                            className="w-full h-12 border-gray-400 border-2 text-base focus:outline-none focus:shadow-none leading-[20.16px] rounded-xl"
+                            placeholder="Adresse ou ville"
+                            {...field}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <Button className="md:w-44 w-full text-white rounded-xl h-12 hover:opacity-85">
+                Rechercher
+              </Button>
+            </form>
+          </Form>
         </div>
       </div>
-      <EntrepreurProfile />
     </section>
   );
 };

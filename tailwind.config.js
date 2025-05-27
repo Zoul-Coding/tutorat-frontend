@@ -24,23 +24,16 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				gradient: 'var(--gradient)',
-				marronFonce: 'var(--marron-fonce)',
-				rosePale: 'var(--rose-pale)',
-				roseClair: 'var(--rose-clair)',
-				roseAncien: 'var(--rose-ancien)',
-				rougeBrique: 'var(--rouge-brique)',
-				linear: 'var(--linear)',
-				bordureInput: 'var(--bordure-input)',
-				background: 'var(--background)',
-				background1: 'var(--background-1)',
-				background3: 'var(--background-3)',
-				background4: 'var(--background-4)',
+				primary: 'var(--primary)',
+				secondary: 'var(--secondary)',
+				card: 'var(--card)',
 			},
 			backgroundImage: {
 				'custom-gradient': 'linear-gradient(90deg, #ff914d, #ab003e)',
-				'background-gradient': 'linear-gradient(#fcd34d, #fb923c)',
+				'hero-gradient': 'linear-gradient(90deg,rgba(30, 50, 100, 1) 32%, rgba(1, 15, 18, 1) 100%)',
 				'gradient-border': 'linear-gradient(to right, #3b82f6, #10b981, #9333ea)',
+				'hero-img': 'url("/assets/hero-img.jpg")',
+				'hero-img-1': 'url("/assets/hero-img-1.jpg")'
 			},
 			boxShadow: {
 				'tremor-input': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
