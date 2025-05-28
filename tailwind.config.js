@@ -31,6 +31,7 @@ module.exports = {
 			backgroundImage: {
 				'custom-gradient': 'linear-gradient(90deg, #ff914d, #ab003e)',
 				'hero-gradient': 'linear-gradient(90deg,rgba(30, 50, 100, 1) 32%, rgba(1, 15, 18, 1) 100%)',
+				'hero-gradient-2': 'linear-gradient(0deg,rgba(228, 228, 240, 0.42) 23%, rgba(161, 179, 240, 1) 100%)',
 				'gradient-border': 'linear-gradient(to right, #3b82f6, #10b981, #9333ea)',
 				'hero-img': 'url("/assets/hero-img.jpg")',
 				'hero-img-1': 'url("/assets/hero-img-1.jpg")'

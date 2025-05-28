@@ -61,10 +61,9 @@ const Tutors = () => {
       </div>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 pt-16 xl:px-0 md:px-12 px-2">
         {tutors.map((tutor, index) => (
-          <Link to="#" className="hover:bg-card rounded-xl">
+          <Link to="#" key={index} className="hover:bg-card rounded-xl">
             <Card
               className="border-none shadow-none bg-transparent"
-              key={index}
             >
               <div className="relative">
                 <img
