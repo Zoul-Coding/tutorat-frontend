@@ -6,6 +6,7 @@ import NoLayout from "./components/layouts/NoLayout";
 import ScrollToTop from "../ScrollToTop";
 import Home from "./pages/Home";
 import AllTutors from "./pages/AllTutors";
+import TutorProfileDescription from "./components/TutorProfileDescription";
 
 // route private
 
@@ -19,6 +20,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/tuteurs" element={<AllTutors />} />
+          <Route path="/tuteurs/:slug" element={<TutorProfileDescription />} />
         </Route>
 
         {/* Routes sans Layout (sans Header et Footer) */}
