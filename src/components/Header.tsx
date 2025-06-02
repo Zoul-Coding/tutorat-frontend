@@ -16,10 +16,10 @@ const Header = () => {
   };
 
   const navLinks = [
-    { name: "Donner des cours", path: "/" },
-    { name: "Tableau de bord", path: "/" },
-    { name: "Messages", path: "/" },
-    { name: "Annonces", path: "/" },
+   /*  { name: "Donner des cours", path: "/" }, */
+    { name: "Tableau de bord", path: "/tableau-de-bord" },
+   /*  { name: "Messages", path: "/" }, */
+    { name: "Annonces", path: "/annonces" },
   ];
 
   return (
