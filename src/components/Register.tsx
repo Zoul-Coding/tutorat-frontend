@@ -6,7 +6,7 @@ import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Loader } from "lucide-react";
 import {
   Form,
   FormField,
@@ -15,259 +15,178 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import authService from "@/services/auth.service";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-const step1Schema = z.object({
-  firstname: z.string().min(2, "Prénom requis"),
-  lastname: z.string().min(2, "Nom requis"),
+const formSchema = z.object({
+  nom: z.string().min(2, "Nom requis"),
+  prenom: z.string().min(2, "Prénom requis"),
   email: z.string().email("Adresse email invalide"),
-  accepted: z.literal(true, {
-    errorMap: () => ({ message: "Vous devez accepter les conditions" }),
-  }),
+  phone: z.string().min(4, "Numéro invalide"),
+  password: z.string().min(6, "6 caractères minimum"),
 });
 
-const step2Schema = z
-  .object({
-    phone: z.string().min(4, "Numéro invalide"),
-    password: z
-      .string()
-      .min(8, "8 caractères minimum")
-      .regex(/[A-Z]/, "1 majuscule")
-      .regex(/[a-z]/, "1 minuscule")
-      .regex(/[0-9]/, "1 chiffre")
-      .regex(/[^a-zA-Z0-9]/, "1 caractère spécial"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Les mots de passe ne correspondent pas",
-    path: ["confirmPassword"],
-  });
-
 export default function Register() {
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<any>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
-  const formStep1 = useForm({
-    resolver: zodResolver(step1Schema),
-    defaultValues: { firstname: "", lastname: "", email: "", accepted: false },
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      nom: "",
+      prenom: "",
+      password: "",
+      phone: "",
+      email: "",
+    },
   });
 
-  const formStep2 = useForm({
-    resolver: zodResolver(step2Schema),
-    defaultValues: { phone: "", password: "", confirmPassword: "" },
-  });
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsSubmitting(true);
 
-  const handleStep1 = (values: any) => {
-    setFormData(values);
-    setStep(2);
-  };
+      localStorage.setItem("email-verified", values.email);
 
-  const handleStep2 = (values: any) => {
-    const fullData = { ...formData, ...values };
-    console.log("Final Submitted Data", fullData);
-  };
+      const response = await authService.register(values);
+      console.log("Response:", response);
+
+      toast.success("Inscription réussie");
+      navigate("/verifier-email");
+    } catch (err: any) {
+      const msg = err?.response?.data?.error || "Erreur lors de l’inscription";
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-xl p-6">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold mt-4">
-            {step === 1
-              ? "Faisons connaissance ! 👋"
-              : `${formData.firstname}, la sécurité avant tout 🔐`}
-          </h1>
+          <h1 className="text-3xl font-bold mt-4">Rejoins-nous !</h1>
           <p className="text-gray-600 mt-2">
-            {step === 1
-              ? "Rejoins-nous ! Nous allons t’aider dans chacune des étapes"
-              : "Nous le gardons bien entendu pour nous."}
+            Nous le gardons bien entendu pour nous.
           </p>
         </div>
 
-        {step === 1 && (
-          <Form {...formStep1}>
-            <form
-              onSubmit={formStep1.handleSubmit(handleStep1)}
-              className="space-y-4"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={formStep1.control}
-                  name="firstname"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prénom</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="rounded border border-gray-400"
-                          placeholder="Tape ton prénom ici"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-500" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={formStep1.control}
-                  name="lastname"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom</FormLabel>
-                      <FormControl>
-                        <Input
-                          className="rounded border border-gray-400"
-                          placeholder="Tape ton nom ici"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-500" />
-                    </FormItem>
-                  )}
-                />
-              </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
-                control={formStep1.control}
-                name="email"
+                control={form.control}
+                name="nom"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Adresse mail</FormLabel>
+                    <FormLabel>Nom</FormLabel>
                     <FormControl>
                       <Input
                         className="rounded border border-gray-400"
-                        placeholder="Tape ton adresse mail ici"
+                        placeholder="Tape ton nom ici"
                         {...field}
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
-                    <p className="text-sm text-blue-600">
-                      Un email vous sera envoyé pour valider cette adresse.
-                    </p>
                   </FormItem>
                 )}
               />
               <FormField
-                control={formStep1.control}
-                name="accepted"
+                control={form.control}
+                name="prenom"
                 render={({ field }) => (
-                  <FormItem className="flex items-center space-x-2">
+                  <FormItem>
+                    <FormLabel>Prénom</FormLabel>
                     <FormControl>
-                      <Checkbox
-                        className="text-white"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
+                      <Input
+                        className="rounded border border-gray-400"
+                        placeholder="Tape ton prénom ici"
+                        {...field}
                       />
                     </FormControl>
-                    <div className="space-y-1 leading-none text-sm">
-                      <FormLabel>
-                        J'ai lu et j'accepte les{" "}
-                        <a href="#" className="text-blue-600 underline">
-                          Conditions Générales d'Utilisation
-                        </a>
-                      </FormLabel>
-                      <FormMessage className="text-red-500" />
-                    </div>
+                    <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
               />
-              <div className="flex justify-end">
-                <Button
-                  className="text-white rounded hover:opacity-85"
-                  type="submit"
-                >
-                  Suivant
-                </Button>
-              </div>
-            </form>
-          </Form>
-        )}
+            </div>
 
-        {step === 2 && (
-          <Form {...formStep2}>
-            <form
-              onSubmit={formStep2.handleSubmit(handleStep2)}
-              className="space-y-4"
-            >
-              <FormField
-                control={formStep2.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Numéro de téléphone</FormLabel>
-                    <FormControl>
-                      <PhoneInput
-                        country="FR"
-                        value={field.value}
-                        onChange={field.onChange}
-                        className="input w-full rounded border border-gray-400"
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adresse mail</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="rounded border border-gray-400"
+                      placeholder="Tape ton adresse mail ici"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                  <p className="text-sm text-blue-600">
+                    Un email vous sera envoyé pour valider cette adresse.
+                  </p>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Numéro de téléphone</FormLabel>
+                  <FormControl>
+                    <PhoneInput
+                      country="FR"
+                      value={field.value}
+                      onChange={field.onChange}
+                      className="input w-full rounded border border-gray-400"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mot de passe</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      className="rounded border border-gray-400"
+                      placeholder="Ton mot de passe ici"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex justify-end">
+              <Button
+                disabled={isSubmitting}
+                className="bg-primary text-white rounded hover:opacity-85"
+                type="submit"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader className="mr-2 h-5 w-5 animate-spin" />
+                    Inscription...
+                  </>
+                ) : (
+                  "Inscription"
                 )}
-              />
-              <FormField
-                control={formStep2.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Mot de passe</FormLabel>
-                    <FormControl>
-                      <Input
-                        className="rounded border border-gray-400"
-                        placeholder="Ton mot de passe ici"
-                        type="password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                    <div className="flex flex-wrap gap-2 text-xs text-gray-600">
-                      <span className="bg-gray-100 font-medium border rounded px-2 py-1">
-                        8 caractères minimum
-                      </span>
-                      <span className="bg-gray-100 font-medium border rounded px-2 py-1">
-                        1 majuscule
-                      </span>
-                      <span className="bg-gray-100 font-medium border rounded px-2 py-1">
-                        1 minuscule
-                      </span>
-                      <span className="bg-gray-100 font-medium border rounded px-2 py-1">
-                        1 chiffre
-                      </span>
-                      <span className="bg-gray-100 font-medium border rounded px-2 py-1">
-                        caractère spécial
-                      </span>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={formStep2.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirme ton mot de passe</FormLabel>
-                    <FormControl>
-                      <Input
-                        className="rounded border border-gray-400"
-                        placeholder="Ton mot de passe ici"
-                        type="password"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-end">
-                <Button
-                  className="text-white rounded hover:opacity-85"
-                  type="submit"
-                >
-                  Enregistrer et continuer
-                </Button>
-              </div>
-            </form>
-          </Form>
-        )}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );

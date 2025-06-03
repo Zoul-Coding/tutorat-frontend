@@ -7,7 +7,12 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getToken() {
-  const token = Cookies.get("access_token");
+  const token = Cookies.get("token");
+  return token;
+}
+
+export function deleteToken() {
+  const token = Cookies.remove("token");
   return token;
 }
 

@@ -3,9 +3,14 @@ import { Link } from "react-router-dom";
 import { AlignJustify, X } from "lucide-react";
 import Logo from "/assets/logo.png";
 import AuthButton from "./AuthButton";
+import { getToken, deleteToken } from "@/lib/utils";
+import { useSetAtom } from "jotai";
+import { userAtom } from "@/atoms/userStore";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const setUser = useSetAtom(userAtom);
+  const token = getToken();
 
   const openMenu = () => {
     setIsMenuOpen(true);
@@ -14,6 +19,7 @@ const Header = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
 
   const navLinks = [
    /*  { name: "Donner des cours", path: "/" }, */
@@ -35,16 +41,17 @@ const Header = () => {
               />
             </Link>
             <nav className="flex items-center gap-6">
-              {navLinks.map((link, index) => (
-                <Link
-                  onClick={closeMenu}
-                  key={index}
-                  className="text-marronFonce text-[14px] font-medium hover:opacity-60"
-                  to={link.path}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {token &&
+                navLinks.map((link, index) => (
+                  <Link
+                    onClick={closeMenu}
+                    key={index}
+                    className="text-marronFonce text-[14px] font-medium hover:opacity-60"
+                    to={link.path}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
               <AuthButton />
             </nav>
           </div>
@@ -75,16 +82,17 @@ const Header = () => {
         <div className="md:hidden fixed w-[100%] top-[50px] z-50 bg-white px-5 py-8">
           <div className="flex flex-col gap-3">
             <nav className="flex flex-col gap-3">
-              {navLinks.map((link, index) => (
-                <Link
-                  onClick={closeMenu}
-                  key={index}
-                  className="text-marronFonce text-base font-medium hover:opacity-60"
-                  to={link.path}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {token &&
+                navLinks.map((link, index) => (
+                  <Link
+                    onClick={closeMenu}
+                    key={index}
+                    className="text-marronFonce text-[14px] font-medium hover:opacity-60"
+                    to={link.path}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
                <AuthButton />
             </nav>
           </div>

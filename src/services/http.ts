@@ -4,7 +4,7 @@ import { removeFromLocalStorage } from "@/lib/utils";
 
 export const BASE_URI = import.meta.env.VITE_API_URL;
 /* export const BASE_URL = `${BASE_URI}/api`; */
-export const BASE_URL = "https://annuaireapi.cyberskills-academy.com/api";
+export const BASE_URL = "http://localhost:8080/api";
 
 export const api = axios.create({
   baseURL: BASE_URL,

@@ -34,7 +34,7 @@ function App() {
         {/* Routes sans Layout (sans Header et Footer) */}
         <Route element={<NoLayout />}>
             <Route path="/inscription" element={<Register />} />
-            <Route path="/verification-otp" element={<OtpVerification />} />
+            <Route path="/verifier-email" element={<OtpVerification />} />
         </Route>
       </Routes>
     </div>

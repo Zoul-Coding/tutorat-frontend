@@ -20,10 +20,15 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import Cookies from "js-cookie";
+import authService from "@/services/auth.service";
+import { useSetAtom } from "jotai";
+import { userAtom } from "@/atoms/userStore";
+import { userWithStorageAtom } from "@/atoms/userStore";
 
-// --- Validation Schema ---
 const loginSchema = z.object({
   email: z.string().email({ message: "Email invalide" }),
   password: z
@@ -31,7 +36,6 @@ const loginSchema = z.object({
     .min(6, { message: "Le mot de passe doit contenir au moins 6 caractères" }),
 });
 
-// --- Types ---
 type LoginSchema = z.infer<typeof loginSchema>;
 
 type LoginProps = {
@@ -39,18 +43,10 @@ type LoginProps = {
   setOpen: (open: boolean) => void;
 };
 
-// --- Fake API ---
-const fakeLogin = async (data: LoginSchema): Promise<{ success: boolean }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log("Connexion réussie :", data);
-      resolve({ success: true });
-    }, 1000);
-  });
-};
-
 const Login = ({ open, setOpen }: LoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const setUser = useSetAtom(userWithStorageAtom);
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -61,9 +57,24 @@ const Login = ({ open, setOpen }: LoginProps) => {
   });
 
   const onSubmit = async (values: LoginSchema) => {
-    const response = await fakeLogin(values);
-    if (response.success) {
+    try {
+      setIsSubmitting(true);
+      const response = await authService.login(values);
+      console.log("Response:", response);
+      const token = response?.token;
+      const data = response?.data;
+
+      setUser(data);
+      Cookies.set("token", token, { expires: 7 });
+
+      toast.success("Connexion réussie !");
+      form.reset();
       setOpen(false);
+      window.location.reload();
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || "Erreur de connexion");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -127,6 +138,7 @@ const Login = ({ open, setOpen }: LoginProps) => {
                 </FormItem>
               )}
             />
+
             <div className="text-right text-sm text-gray-600 mb-4">
               <a href="#" className="font-medium hover:underline">
                 Mot de passe oublié ?
@@ -135,14 +147,25 @@ const Login = ({ open, setOpen }: LoginProps) => {
 
             <Button
               type="submit"
+              disabled={isSubmitting}
               className="w-full text-white hover:opacity-85 rounded"
             >
-              Se connecter
+              {isSubmitting ? (
+                <>
+                  <Loader className="mr-2 h-5 w-5 animate-spin" />
+                  Connexion...
+                </>
+              ) : (
+                "Se connecter"
+              )}
             </Button>
 
             <div className="text-center text-md text-gray-600 mt-4">
               Pas encore de compte ?{" "}
-              <a href="/inscription" className="text-blue-700 font-medium hover:underline">
+              <a
+                href="/inscription"
+                className="text-blue-700 font-medium hover:underline"
+              >
                 Inscrivez-vous
               </a>
             </div>

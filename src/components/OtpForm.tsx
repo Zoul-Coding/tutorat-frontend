@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,6 +18,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import authService from "@/services/auth.service";
+import { Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const FormSchema = z.object({
   otp: z.string().min(6, {
@@ -26,6 +29,10 @@ const FormSchema = z.object({
 });
 
 export function OtpVerification() {
+  const emailVerified = localStorage.getItem("email-verified") || "";
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -33,10 +40,26 @@ export function OtpVerification() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast.success("Code vérifié avec succès !", {
-      description: `Code : ${data.otp}`,
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      setIsSubmitting(true);
+
+      const payload = {
+        otp: data.otp,
+        email: emailVerified,
+      };
+
+      const response = await authService.verifyEmail(payload);
+
+      toast.success("Code vérifié avec succès !");
+      localStorage.removeItem("email-verified");
+      navigate("/");
+    } catch (error: any) {
+      const msg = error?.response?.data?.message || "Erreur de vérification.";
+      toast.error(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -44,7 +67,7 @@ export function OtpVerification() {
       <div className="bg-gray-100 flex items-center justify-center h-screen">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="bg-white space-y-6 px-6 py-6 rounded-xl"
+          className="bg-white space-y-6 px-6 py-6 rounded-xl w-[350px]"
         >
           <FormField
             control={form.control}
@@ -70,10 +93,18 @@ export function OtpVerification() {
           />
 
           <Button
-            className="text-white w-full rounded hover:opacity-85"
             type="submit"
+            disabled={isSubmitting}
+            className="text-white w-full rounded hover:opacity-85 bg-primary"
           >
-            Confirmer
+            {isSubmitting ? (
+              <>
+                <Loader className="mr-2 h-5 w-5 animate-spin" />
+                Vérification...
+              </>
+            ) : (
+              "Confirmer"
+            )}
           </Button>
         </form>
       </div>
