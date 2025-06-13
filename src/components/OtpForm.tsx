@@ -53,7 +53,7 @@ export function OtpVerification() {
 
       toast.success("Code vérifié avec succès !");
       localStorage.removeItem("email-verified");
-      navigate("/");
+      navigate("/connexion");
     } catch (error: any) {
       const msg = error?.response?.data?.message || "Erreur de vérification.";
       toast.error(msg);
@@ -67,7 +67,7 @@ export function OtpVerification() {
       <div className="bg-gray-100 flex items-center justify-center h-screen">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="bg-white space-y-6 px-6 py-6 rounded-xl w-[350px]"
+          className="bg-white space-y-6 px-6 py-6 rounded-xl w-[440px]"
         >
           <FormField
             control={form.control}

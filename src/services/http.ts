@@ -13,7 +13,7 @@ export const api = axios.create({
 export const configureInterceptors = (setUser: any) => {
   api.interceptors.request.use(
     (config) => {
-      const accessToken = Cookies.get("access_token");
+      const accessToken = Cookies.get("token");
       if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;
       }
@@ -31,7 +31,7 @@ export const configureInterceptors = (setUser: any) => {
       if (error.response && error.response.status === 401) {
         if (error.response.data.message === "Unauthenticated.") {
           setUser(null);
-          Cookies.remove("access_token");
+          Cookies.remove("token");
           removeFromLocalStorage("user");
         }
       }

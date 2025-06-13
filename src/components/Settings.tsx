@@ -4,12 +4,13 @@ import { EducationSheet } from "./EducationSheet";
 import { ExperienceSheet } from "./ExperienceSheet";
 import ResetForm from "./ResetForm";
 import { useState } from "react";
+import { UploadProfilePhoto } from "./UploadProfilePhoto";
 
 const Settings = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="pt-24 pb-24">
+    <div className="pt-24">
       <div className="max-w-screen-xl mx-auto xl:px-0 px-2">
         <h2 className="text-3xl font-bold pt-10">Paramètre</h2>
         <Tabs
@@ -22,21 +23,23 @@ const Settings = () => {
             <TabsTrigger value="factures">Factures</TabsTrigger>
           </TabsList>
           <div className="col-span-5">
-            <TabsContent
-              className="bg-gray-100 rounded-xl px-6 py-6"
-              value="profil"
-            >
-              <div className="flex items-center justify-between bg-white px-6 py-4 rounded-xl">
-                <h3 className="text-xl font-bold">
-                  Certificat de scolarité / carte étudiante / diplôme 🎓
-                </h3>
-                <EducationSheet />
+            <TabsContent className="" value="profil">
+              <div className="">
+                <UploadProfilePhoto />
               </div>
-              <div className="flex items-center justify-between bg-white px-6 py-4 rounded-xl mt-4">
-                <h3 className="text-xl font-bold">
-                  Expériences professionnelles 🏢
-                </h3>
-                <ExperienceSheet />
+              <div className="bg-gray-100 rounded-xl px-6 py-6">
+                <div className="flex items-center justify-between bg-white px-6 py-4 rounded-xl">
+                  <h3 className="text-xl font-bold">
+                    Certificat de scolarité / carte étudiante / diplôme 🎓
+                  </h3>
+                  <EducationSheet />
+                </div>
+                <div className="flex items-center justify-between bg-white px-6 py-4 rounded-xl mt-4">
+                  <h3 className="text-xl font-bold">
+                    Expériences professionnelles 🏢
+                  </h3>
+                  <ExperienceSheet />
+                </div>
               </div>
             </TabsContent>
             <TabsContent
@@ -73,7 +76,7 @@ const Settings = () => {
               className="bg-gray-100 rounded-xl px-6 py-6"
               value="factures"
             >
-             Aucune factures pour le moment.
+              Aucune factures pour le moment.
             </TabsContent>
           </div>
         </Tabs>

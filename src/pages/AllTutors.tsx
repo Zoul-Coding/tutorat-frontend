@@ -30,10 +30,23 @@ import { HiBadgeCheck } from "react-icons/hi";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { PaginationComponent } from "@/components/ComponentPagination";
+import Profile2 from "../../public/assets/profile-2.jpg";
+import Profile3 from "../../public/assets/profile-3.jpg";
 
 const tutors = [
   {
-    image: Profile,
+    image: Profile2,
+    school: "SCG Business School",
+    name: "Augustine",
+    localisation: "Cotonou",
+    disponibilite: "En ligne, À domicile",
+    price: "26,60",
+    star: "4,72",
+    description:
+      "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
+  },
+  {
+    image: Profile3,
     school: "SCG Business School",
     name: "Augustine",
     localisation: "Cotonou",
@@ -55,7 +68,7 @@ const tutors = [
       "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
   },
   {
-    image: Profile,
+    image: Profile2,
     school: "SCG Business School",
     name: "Augustine",
     localisation: "Cotonou",
@@ -66,7 +79,7 @@ const tutors = [
       "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
   },
   {
-    image: Profile,
+    image: Profile3,
     school: "SCG Business School",
     name: "Augustine",
     localisation: "Cotonou",
@@ -381,7 +394,7 @@ const AllTutors = () => {
       </div>
 
       <PaginationComponent
-            totalPages={10}
+            totalPages={2}
             currentPage={1}
             onPageChange={(page) => console.log("Current Page:", page)}
       />

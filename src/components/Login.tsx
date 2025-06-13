@@ -1,12 +1,4 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-
-import {
   Form,
   FormField,
   FormItem,
@@ -28,6 +20,7 @@ import authService from "@/services/auth.service";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/atoms/userStore";
 import { userWithStorageAtom } from "@/atoms/userStore";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Email invalide" }),
@@ -38,15 +31,13 @@ const loginSchema = z.object({
 
 type LoginSchema = z.infer<typeof loginSchema>;
 
-type LoginProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-};
-
-const Login = ({ open, setOpen }: LoginProps) => {
+const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setUser = useSetAtom(userWithStorageAtom);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from?.pathname || "/";
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -60,7 +51,6 @@ const Login = ({ open, setOpen }: LoginProps) => {
     try {
       setIsSubmitting(true);
       const response = await authService.login(values);
-      console.log("Response:", response);
       const token = response?.token;
       const data = response?.data;
 
@@ -69,8 +59,10 @@ const Login = ({ open, setOpen }: LoginProps) => {
 
       toast.success("Connexion réussie !");
       form.reset();
-      setOpen(false);
-      window.location.reload();
+      /*  window.location.reload(); */
+      /* navigate(from, { replace: true }); */
+      navigate("/tableau-de-bord");
+      /*  window.location.reload(); */
     } catch (err: any) {
       toast.error(err?.response?.data?.error || "Erreur de connexion");
     } finally {
@@ -79,15 +71,13 @@ const Login = ({ open, setOpen }: LoginProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="bg-white rounded-xl">
-        <DialogHeader>
-          <DialogTitle>Connexion</DialogTitle>
-          <DialogDescription>Connectez-vous à votre compte</DialogDescription>
-        </DialogHeader>
-
+    <div className="bg-gray-100 min-h-screen pt-32">
+      <div className="bg-white max-w-sm mx-auto rounded-xl py-6 px-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 w-full"
+          >
             <FormField
               control={form.control}
               name="email"
@@ -171,8 +161,8 @@ const Login = ({ open, setOpen }: LoginProps) => {
             </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 };
 

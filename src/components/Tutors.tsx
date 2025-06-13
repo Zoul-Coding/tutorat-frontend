@@ -5,6 +5,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Profile from "../../public/assets/profile.jpg";
+import Profile1 from "../../public/assets/profile-1.jpg";
+import Profile2 from "../../public/assets/profile-2.jpg";
+import Profile3 from "../../public/assets/profile-3.jpg";
 import { School, Heart, MoveRight } from "lucide-react";
 import { HiBadgeCheck } from "react-icons/hi";
 import { FaStar } from "react-icons/fa";
@@ -24,7 +27,7 @@ const Tutors = () => {
         "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
     },
     {
-      image: Profile,
+      image: Profile3,
       school: "SCG Business School",
       name: "Augustine",
       localisation: "Cotonou",
@@ -35,7 +38,18 @@ const Tutors = () => {
         "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
     },
     {
-      image: Profile,
+      image: Profile2,
+      school: "SCG Business School",
+      name: "Augustine",
+      localisation: "Cotonou",
+      disponibilite: "En ligne, À domicile",
+      price: "26,60",
+      star: "4,72",
+      description:
+        "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
+    },
+    {
+      image: Profile3,
       school: "SCG Business School",
       name: "Augustine",
       localisation: "Cotonou",
@@ -61,7 +75,7 @@ const Tutors = () => {
       </div>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 pt-16 xl:px-0 md:px-12 px-2">
         {tutors.map((tutor, index) => (
-          <Link to="#" key={index} className="hover:bg-card rounded-xl">
+          <Link to="/tuteurs" key={index} className="hover:bg-card rounded-xl">
             <Card
               className="border-none shadow-none bg-transparent"
             >
@@ -119,7 +133,7 @@ const Tutors = () => {
                     <strong className="text-gray-500">h</strong>
                   </p>
                   <Link
-                    to="#"
+                    to="/tuteurs"
                     className="bg-primary px-4 py-2 text-white text-[14px] font-medium rounded hover:opacity-85"
                   >
                     Contacter
@@ -132,7 +146,7 @@ const Tutors = () => {
       </div>
       <div className="flex justify-center pt-8">
         <Link
-          to="#"
+          to="/tuteurs"
           className="bg-primary px-4 py-2 text-white text-[14px] font-medium rounded hover:opacity-85 flex items-center gap-4"
         >
           Trouver un tuteur

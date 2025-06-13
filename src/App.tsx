@@ -12,11 +12,13 @@ import { OtpVerification } from "./components/OtpForm";
 import Settings from "./components/Settings";
 import Annonces from "./components/Annonces";
 import Dashbaord from "./components/Dashbaord";
+import Login from "./components/Login";
 
 // route private
+import PrivateRoute from "./atoms/PrivateRoute";
+import RequiedAuth from "./atoms/RequiedAuth";
 
 function App() {
-
   return (
     <div>
       <ScrollToTop />
@@ -26,15 +28,20 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/tuteurs" element={<AllTutors />} />
           <Route path="/tuteurs/:slug" element={<TutorProfileDescription />} />
-          <Route path="/parametres" element={<Settings />} />
-          <Route path="/annonces" element={<Annonces />} />
-          <Route path="/tableau-de-bord" element={<Dashbaord />} />
+          <Route element={<RequiedAuth />}>
+            <Route path="/parametres" element={<Settings />} />
+            <Route path="/annonces" element={<Annonces />} />
+            <Route path="/tableau-de-bord" element={<Dashbaord />} />
+          </Route>
         </Route>
 
         {/* Routes sans Layout (sans Header et Footer) */}
         <Route element={<NoLayout />}>
+          <Route element={<PrivateRoute />}>
             <Route path="/inscription" element={<Register />} />
-            <Route path="/verifier-email" element={<OtpVerification />} />
+            <Route path="/connexion" element={<Login />} />
+          </Route>
+          <Route path="/verifier-email" element={<OtpVerification />} />
         </Route>
       </Routes>
     </div>

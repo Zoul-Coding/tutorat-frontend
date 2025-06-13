@@ -18,15 +18,24 @@ import Login from "./Login";
 import { getToken, deleteToken } from "@/lib/utils";
 import { useSetAtom } from "jotai";
 import { userAtom } from "@/atoms/userStore";
+import { useNavigate } from "react-router-dom";
+import useFetchInfoUser from "@/requests/useFetchUserInfos";
 
 const AuthButton = () => {
-  const [open, setOpen] = useState(false);
   const token = getToken();
   const setUser = useSetAtom(userAtom);
+  const navigate = useNavigate();
+  const { data: userInfos, isLoading: loading } = useFetchInfoUser();
+  console.log(userInfos);
+
+    const getFirstLetter = (str: string | null): string =>
+    str ? str.charAt(0).toUpperCase() : "";
   
    const handleLogout = () => {
     deleteToken();
     setUser(null);
+   /*  window.location.reload(); */
+    navigate("/");
     window.location.reload();
   };
 
@@ -38,11 +47,14 @@ const AuthButton = () => {
             <DropdownMenuTrigger asChild>
               <Avatar>
                 <AvatarImage
-                  className="rounded-full"
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
+                  className="rounded-full border border-gray-500"
+                 src={userInfos?.photo}
+                  alt="@"
                 />
-                <AvatarFallback className="rounded-full">CN</AvatarFallback>
+                <AvatarFallback className="rounded-full text-white bg-primary">
+                    {getFirstLetter(userInfos?.prenom)}
+                    {getFirstLetter(userInfos?.nom)}
+                </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -59,12 +71,12 @@ const AuthButton = () => {
           </DropdownMenu>
         ) : (
           <div className="flex items-center gap-6">
-            <button
-              onClick={() => setOpen(true)}
+            <Link
+              to="/connexion"
               className="border border-primary px-6 py-3 text-[14px] font-medium rounded hover:bg-gray-100"
             >
               Connexion
-            </button>
+            </Link>
             <Link
               to="/inscription"
               className="bg-primary px-6 py-3 text-white text-[14px] font-medium rounded hover:opacity-85"
@@ -75,7 +87,6 @@ const AuthButton = () => {
         )}
       </div>
 
-      <Login open={open} setOpen={setOpen} />
     </>
   );
 };
