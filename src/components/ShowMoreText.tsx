@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 const ShowMoreText = ({
-  text,
+  text = "",
   maxChars = 100,
   className = "",
 }: {
-  text: string;
+  text?: string;
   maxChars?: number;
   className?: string;
 }) => {
@@ -20,7 +20,7 @@ const ShowMoreText = ({
 
   return (
     <div className={className}>
-      <p className={className}>
+      <p>
         {displayText}
         {isLongText && !isExpanded && "..."}
       </p>

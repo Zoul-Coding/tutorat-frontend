@@ -49,7 +49,6 @@ export default function Register() {
       localStorage.setItem("email-verified", values.email);
 
       const response = await authService.register(values);
-      console.log("Response:", response);
 
       toast.success("Inscription réussie");
       navigate("/verifier-email");

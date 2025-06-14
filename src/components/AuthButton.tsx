@@ -26,7 +26,6 @@ const AuthButton = () => {
   const setUser = useSetAtom(userAtom);
   const navigate = useNavigate();
   const { data: userInfos, isLoading: loading } = useFetchInfoUser();
-  console.log(userInfos);
 
     const getFirstLetter = (str: string | null): string =>
     str ? str.charAt(0).toUpperCase() : "";

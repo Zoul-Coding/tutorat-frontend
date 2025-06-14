@@ -30,6 +30,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useFetchInfoUser from "@/requests/useFetchUserInfos";
+import certificatService from "@/services/certificat.service";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import { mutate } from "swr";
 
 const months = [
   "janvier",
@@ -51,8 +56,8 @@ const years = Array.from({ length: 2035 - 1960 + 1 }, (_, i) =>
 
 const FormSchema = z.object({
   schoolName: z.string().min(2, "Champ requis"),
-  degree: z.string().min(2, "Champ requis"),
-  field: z.string().min(2, "Champ requis"),
+  diplome: z.string().min(2, "Champ requis"),
+  domaine: z.string().min(2, "Champ requis"),
   startMonth: z.string(),
   startYear: z.string(),
   endMonth: z.string(),
@@ -62,12 +67,16 @@ const FormSchema = z.object({
 
 export function EducationSheet() {
   const [open, setOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { data: userInfos } = useFetchInfoUser();
+    const userId = userInfos?._id;  
+  
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       schoolName: "",
-      degree: "",
-      field: "",
+      diplome: "",
+      domaine: "",
       startMonth: "",
       startYear: "",
       endMonth: "",
@@ -76,11 +85,33 @@ export function EducationSheet() {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Soumis:", data);
-    setOpen(false);
-  };
 
+
+  type CertificatFormData = z.infer<typeof FormSchema>;
+ 
+   const onSubmit = async (data: CertificatFormData) => {
+     setIsSubmitting(true);
+ 
+     try {
+ 
+       const payload = {
+       ...data,
+       userId: userId,
+     };
+ 
+       const response = await certificatService.createCertificat(payload);
+       toast.success(response?.message);
+       form.reset();
+       /*  mutate("fetch_user_annonce"); */
+       setOpen(false);
+     } catch (error: any) {
+       console.error(error);
+       const errorMessage = error?.message || error;
+       toast.error(errorMessage);
+     } finally {
+       setIsSubmitting(false);
+     }
+   };
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -126,7 +157,7 @@ export function EducationSheet() {
 
               <FormField
                 control={form.control}
-                name="degree"
+                name="diplome"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Diplôme obtenu</FormLabel>
@@ -145,7 +176,7 @@ export function EducationSheet() {
 
             <FormField
               control={form.control}
-              name="field"
+              name="domaine"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Domaine d’études</FormLabel>
@@ -204,7 +235,7 @@ export function EducationSheet() {
                           <SelectTrigger className="rounded border border-gray-400">
                             <SelectValue placeholder="Année" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-white">
                             {years.map((y) => (
                               <SelectItem key={y} value={y}>
                                 {y}
@@ -238,7 +269,7 @@ export function EducationSheet() {
                           <SelectTrigger className="rounded border border-gray-400">
                             <SelectValue placeholder="Mois" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-white">
                             {months.map((m) => (
                               <SelectItem key={m} value={m}>
                                 {m}
@@ -265,7 +296,7 @@ export function EducationSheet() {
                           <SelectTrigger className="rounded border border-gray-400">
                             <SelectValue placeholder="Année" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-white">
                             {years.map((y) => (
                               <SelectItem key={y} value={y}>
                                 {y}
@@ -299,11 +330,18 @@ export function EducationSheet() {
               )}
             />
 
-            <Button
+           <Button
+              disabled={isSubmitting}
               className="text-white rounded hover:opacity-85"
               type="submit"
             >
-              Créer
+              {isSubmitting ? (
+                <>
+                  <Loader className="texte white h-5 w-5 animate-spin" />
+                </>
+              ) : (
+                " Créer"
+              )}
             </Button>
           </form>
         </Form>

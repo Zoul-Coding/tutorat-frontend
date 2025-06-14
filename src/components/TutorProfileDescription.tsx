@@ -16,83 +16,63 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { School, Heart, ListFilter } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import useFetchShowAnnonce from "@/requests/useFetchShowAnnonce";
+import { Loader } from "lucide-react";
 
 const TutorsProfileDescription = () => {
-  const textAbout =
-    "Professeur titulaire de l'éducation nationale, je propose des cours particuliers et de l'accompagnement scolaire en mathématiques. Mon intervention auprès des élèves vise à leur faire progresser, se reconnecter et donner du sens aux mathématiques, ainsi je leur propose : 1- une méthode de travail adapté pour redonner la confiance en eux dans cette matière 2- une compréhension et un moyen d'application intelligente du cours dans les exercices 3- une réflexion cohérente et linéaire pour arriver à un raisonnement logique 4- un apprentissage de lecture de l'énoncé afin d'identifier les points d'attention qui servent de guide dans la démarche de résolution";
+  const { slug } = useParams();
+  console.log(slug);
 
-  const avis = [
-    {
-      id: 1,
-      name: "Alice",
-      level: "Lycée",
-      comment:
-        "Vincent est un excellent professeur, il m'a beaucoup aidé à comprendre les mathématiques.",
-      rating: 4,
-      date: "2023-10-01",
-    },
-    {
-      id: 2,
-      name: "Bob",
-      level: "Prépa",
-      comment:
-        "Ses explications sont claires et précises, je recommande vivement !",
-      rating: 2,
-      date: "2023-10-01",
-    },
-    {
-      id: 3,
-      name: "Charlie",
-      level: "Lycée",
-      comment: "Très pédagogue, j'ai progressé rapidement grâce à ses cours.",
-      rating: 4,
-      date: "2023-10-01",
-    },
-  ];
-
-  const tutors = {
-    image: Profile,
-    school: "SCG Business School",
-    name: "Augustine",
-    localisation: "Cotonou",
-    price: "26,60",
-    star: "4,72",
-  };
+  const { data: showAnnonce, isLoading: loading } = useFetchShowAnnonce(
+    String(slug)
+  );
 
   return (
     <section className="max-w-screen-xl mx-auto pt-32 pb-8">
-      <div className="grid grid-cols-8 gap-12">
-        <div className="flex flex-col gap-12 col-span-6">
-          <div className="bg-gray-50 rounded px-8 py-8">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2">
-                <h2 className="text-4xl font-bold">Vincent</h2>
-                <HiBadgeCheck className="w-8 h-8 text-blue-600" />
-              </div>
-              <p className="text-md text-gray-600">
-                Sainte-Foy-lès-Lyon · Maths
-              </p>
-              <p className="uppercase text-md pt-3">
-                PROFESSEUR EXPÉRIMENTÉ DE MATHÉMATIQUES DONNE COURS EN
-                PRESENTIEL DANS LE RHONE ET EN LIGNE
-              </p>
-
-              <div className="flex items-center gap-4">
-                <div className="bg-gray-200 rounded flex items-center gap-2 px-2 py-1">
-                  <MdVideocam className="w-4 h-4" />
-                  <p className="text-sm font-medium text-gray-600">En ligne</p>
+      {loading && showAnnonce?.length !== 0 ? (
+        <div className="flex justify-center items-center gap-2 pt-28">
+          <Loader className="texte white h-6 w-6 animate-spin" />
+          <p className="text-md">Chargement...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-8 gap-12">
+          <div className="flex flex-col gap-12 col-span-6">
+            <div className="bg-gray-50 rounded px-8 py-8">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-4xl font-bold">
+                    {showAnnonce?.user?.nom} {showAnnonce?.user?.prenom}
+                  </h2>
+                  {/*  <HiBadgeCheck className="w-8 h-8 text-blue-600" /> */}
                 </div>
-                <div className="bg-gray-200 rounded flex items-center gap-2 px-2 py-1">
-                  <HiLocationMarker className="w-4 h-4" />
-                  <p className="text-sm font-medium text-gray-600">
-                    A domicile
-                  </p>
+                <p className="text-md text-gray-600">
+                  Cotonou · {showAnnonce?.annonce?.matiere}
+                </p>
+                <p className="uppercase text-md pt-3">
+                  {showAnnonce?.annonce?.titre}
+                </p>
+
+                <div className="flex items-center gap-4">
+                  {showAnnonce?.annonce?.lieu === "À domicile" ? (
+                    <div className="bg-gray-200 rounded flex items-center gap-2 px-2 py-1">
+                      <HiLocationMarker className="w-4 h-4" />
+                      <p className="text-sm font-medium text-gray-600">
+                        A domicile
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="bg-gray-200 rounded flex items-center gap-2 px-2 py-1">
+                      <MdVideocam className="w-4 h-4" />
+                      <p className="text-sm font-medium text-gray-600">
+                        En ligne
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
-          <div className="flex justify-between gap-8">
+            {/*   <div className="flex justify-between gap-8">
             <div className="border border-gray-200 w-full rounded-xl px-6 py-6">
               <div className="flex flex-col gap-2">
                 <HiBadgeCheck className="w-8 h-8 text-blue-600" />
@@ -161,75 +141,82 @@ const TutorsProfileDescription = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div className="border border-gray-200 rounded-xl px-8 py-8">
-            <h2 className="text-3xl font-bold">À propos</h2>
-            <ShowMoreText
-              className="pt-4 text-md"
-              text={textAbout}
-              maxChars={420}
-            />
-          </div>
-          <div className="border border-gray-200 rounded-xl px-8 py-8">
-            <h2 className="text-3xl font-bold">Méthodologie</h2>
-            <ShowMoreText
-              className="pt-4 text-md"
-              text={textAbout}
-              maxChars={420}
-            />
-            <div className="flex flex-col gap-3 pt-8">
-              <p className="text-sm font-medium text-gray-500">
-                Niveau(x) enseigné(s)
-              </p>
-              <div className="flex items-center gap-4">
-                <div className="bg-gray-200 rounded flex items-center gap-1 px-2 py-1">
-                  <RiSchoolLine className="text-gray-500 w-4 h-4" />
-                  <p className="text-sm font-medium text-gray-500">Lycée</p>
-                </div>
-                <div className="bg-gray-200 rounded flex items-center gap-1 px-2 py-1">
-                  <RiSchoolLine className="text-gray-500 w-4 h-4" />
-                  <p className="text-sm font-medium text-gray-500">Prépa</p>
+          </div> */}
+            <div className="border border-gray-200 rounded-xl px-8 py-8">
+              <h2 className="text-3xl font-bold">À propos</h2>
+              <ShowMoreText
+                className="pt-4 text-md"
+                text={showAnnonce?.annonce?.introduction}
+                maxChars={420}
+              />
+            </div>
+            <div className="border border-gray-200 rounded-xl px-8 py-8">
+              <h2 className="text-3xl font-bold">Méthodologie</h2>
+              <ShowMoreText
+                className="pt-4 text-md"
+                text={showAnnonce?.annonce?.methodologie}
+                maxChars={420}
+              />
+              <div className="flex flex-col gap-3 pt-8">
+                <p className="text-sm font-medium text-gray-500">
+                  Niveau(x) enseigné(s)
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="bg-gray-200 rounded flex items-center gap-1 px-2 py-1">
+                    <RiSchoolLine className="text-gray-500 w-4 h-4" />
+                    <p className="text-sm font-medium text-gray-500">
+                      {showAnnonce?.annonce?.niveau}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="border border-gray-200 rounded-xl px-8 py-8">
-            <h2 className="text-3xl font-bold">Diplômes</h2>
-            <div className="flex flex-col gap-1 pt-5">
-              <p className="text-sm font-medium">Université Paris Saclay</p>
-              <p className="text-sm font-medium text-gray-500">
-                Master Neurosciences computationelles
-              </p>
-              <p className="text-sm font-medium text-gray-500">
-                Septembre 2021 - Septembre 2022 · 1 an(s) 1 mois
-              </p>
-              <p className="text-sm font-medium uppercase pt-6">
+            <div className="border border-gray-200 rounded-xl px-8 py-8">
+              <h2 className="text-3xl font-bold">Diplômes</h2>
+              {showAnnonce?.certificates?.map(
+                (certificate: any, index: any) => (
+                  <div key={index} className="flex flex-col gap-1 pt-5">
+                    <p className="text-sm font-medium">
+                      {certificate?.schoolName}
+                    </p>
+                    <p className="text-sm font-medium text-gray-500 uppercase">
+                      {certificate?.diplome}
+                    </p>
+                    <p className="text-sm font-medium text-gray-500">
+                      {certificate?.startMonth} {certificate?.startYear} -{" "}
+                      {certificate?.endMonth} {certificate?.endYear}
+                    </p>
+                    {/* <p className="text-sm font-medium uppercase pt-6">
                 Master en IA et Neurosciences computationelles.
               </p>
               <div className="bg-gray-100 w-20 rounded flex items-center justify-center gap-1 px-2 py-1 mt-4">
                 <HiBadgeCheck className="text-green-500 w-4 h-4" />
                 <p className="text-sm font-medium text-gray-700">Vérifié</p>
-              </div>
+              </div> */}
+                  </div>
+                )
+              )}
             </div>
-          </div>
-          <div className="border border-gray-200 rounded-xl px-8 py-8">
-            <h2 className="text-3xl font-bold">Expériences professionnelles</h2>
-            <div className="flex flex-col gap-1 pt-5 border-b border-gray-200 pb-5">
-              <p className="text-sm font-medium">Ingénieur IA</p>
-              <p className="text-sm font-medium text-gray-500">GE - CDI</p>
-              <p className="text-sm font-medium text-gray-500">
-                Février 2023 - aujourd'hui · 2 an(s) 4 mois
-              </p>
+            <div className="border border-gray-200 rounded-xl px-8 py-8">
+              <h2 className="text-3xl font-bold">
+                Expériences professionnelles
+              </h2>
+              {showAnnonce?.experiences?.map((experience: any, index: any) => (
+                <div className="flex flex-col gap-1 pt-5 border-b border-gray-200 pb-5">
+                  <p className="text-sm font-medium uppercase">
+                    {experience?.title}
+                  </p>
+                  <p className="text-sm font-medium text-gray-500 uppercase">
+                    {experience?.type}
+                  </p>
+                  <p className="text-sm font-medium text-gray-500">
+                    {experience?.startMonth} {experience?.startYear} -{" "}
+                    {experience?.endMonth} {experience?.endYear}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div className="flex flex-col gap-1 pt-5 border-b border-gray-200 pb-5">
-              <p className="text-sm font-medium">Ingénieur IA</p>
-              <p className="text-sm font-medium text-gray-500">GE - CDI</p>
-              <p className="text-sm font-medium text-gray-500">
-                Février 2023 - aujourd'hui · 2 an(s) 4 mois
-              </p>
-            </div>
-          </div>
-          <div className="border border-gray-200 rounded-xl px-8 py-8">
+            {/*  <div className="border border-gray-200 rounded-xl px-8 py-8">
             <div className="flex items-center justify-between">
               <h2 className="text-3xl font-bold">4 avis sur Vincent⭐️</h2>
               <div className="flex items-center gap-2">
@@ -279,27 +266,23 @@ const TutorsProfileDescription = () => {
                 </div>
               ))}
             </div>
+          </div> */}
           </div>
-        </div>
-        <div className="col-span-2">
-          <Link
-            to={`/tuteurs/${tutors.name}`}
-            className="hover:bg-card rounded-xl"
-          >
+          <div className="col-span-2">
             <Card className="border-none shadow-none bg-transparent">
               <div className="relative">
                 <img
                   className="w-full md:h-[250px] h-full rounded-xl"
-                  src={tutors.image}
-                  alt={tutors.name}
+                  src={showAnnonce?.user?.photo}
+                  alt={showAnnonce?.user?.prenom}
                 />
                 <div className="absolute top-0 flex justify-between w-full items-center px-4 py-4">
-                  <div className="flex items-center w-44 gap-2 bg-black/80 rounded-full px-1 py-1">
+                  {/*  <div className="flex items-center w-44 gap-2 bg-black/80 rounded-full px-1 py-1">
                     <div className="bg-white rounded-full px-1 py-1">
                       <School className="w-4 h-4" />
                     </div>
-                    <p className="text-sm text-white">{tutors.school}</p>
-                  </div>
+                    <p className="text-sm text-white">{showAnnonce?user.schoolName}</p>
+                  </div> */}
                   <div className="bg-black/80 rounded-full px-2 py-2">
                     <Heart className="text-white w-5 h-5" />
                   </div>
@@ -310,41 +293,44 @@ const TutorsProfileDescription = () => {
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-xl font-bold">
-                        {tutors.name}
+                        {showAnnonce?.user?.prenom}
                       </CardTitle>
-                      <HiBadgeCheck className="w-5 h-5" />
+                     {/*  <HiBadgeCheck className="w-5 h-5" /> */}
                     </div>
-                    <p className="text-gray-500 text-sm font-medium">
-                      {tutors.localisation}
-                    </p>
+                    <p className="text-gray-500 text-sm font-medium">Cotonou</p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  {/*  <div className="flex items-center gap-2">
                     <FaStar className="text-yellow-500 w-5 h-5" />
                     <CardTitle className="text-md">
                       {tutors.star}{" "}
                       <span className="text-gray-500">(4 avis)</span>
                     </CardTitle>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="flex flex-col gap-2 pt-3">
                   <div className="flex justify-between items-center">
                     <p>Cours d'essai</p>
                     <p className="text-sm">Offert</p>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <p>En ligne</p>
-                    <p className="text-sm">
-                      <strong>{tutors.price}</strong> <strong>€/</strong>{" "}
-                      <strong className="text-gray-500">h</strong>
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p>À domicile</p>
-                    <p className="text-sm">
-                      <strong>{tutors.price}</strong> <strong>€/</strong>{" "}
-                      <strong className="text-gray-500">h</strong>
-                    </p>
-                  </div>
+                  {showAnnonce?.annonce?.lieu === "À domicile" ? (
+                    <div className="flex justify-between items-center">
+                      <p>À domicile</p>
+                      <p className="text-sm">
+                        <strong>{showAnnonce?.annonce?.tarif}</strong>{" "}
+                        <strong>€/</strong>{" "}
+                        <strong className="text-gray-500">h</strong>
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between items-center">
+                      <p>En ligne</p>
+                      <p className="text-sm">
+                        <strong>{showAnnonce?.annonce?.tarif}</strong>{" "}
+                        <strong>€/</strong>{" "}
+                        <strong className="text-gray-500">h</strong>
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className="pt-6">
                   <Link
@@ -356,9 +342,9 @@ const TutorsProfileDescription = () => {
                 </div>
               </CardContent>
             </Card>
-          </Link>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   );
 };

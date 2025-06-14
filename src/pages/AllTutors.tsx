@@ -24,74 +24,17 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { X } from "lucide-react";
-import Profile from "../../public/assets/profile.jpg";
 import { School, Heart, ListFilter } from "lucide-react";
 import { HiBadgeCheck } from "react-icons/hi";
 import { FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { PaginationComponent } from "@/components/ComponentPagination";
-import Profile2 from "../../public/assets/profile-2.jpg";
-import Profile3 from "../../public/assets/profile-3.jpg";
+import useFetchAllAnnonce from "@/requests/useFetchAllAnnonce";
+import { shortenText } from "@/lib/utils";
 
-const tutors = [
-  {
-    image: Profile2,
-    school: "SCG Business School",
-    name: "Augustine",
-    localisation: "Cotonou",
-    disponibilite: "En ligne, À domicile",
-    price: "26,60",
-    star: "4,72",
-    description:
-      "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
-  },
-  {
-    image: Profile3,
-    school: "SCG Business School",
-    name: "Augustine",
-    localisation: "Cotonou",
-    disponibilite: "En ligne, À domicile",
-    price: "26,60",
-    star: "4,72",
-    description:
-      "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
-  },
-  {
-    image: Profile,
-    school: "SCG Business School",
-    name: "Augustine",
-    localisation: "Cotonou",
-    disponibilite: "En ligne, À domicile",
-    price: "26,60",
-    star: "4,72",
-    description:
-      "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
-  },
-  {
-    image: Profile2,
-    school: "SCG Business School",
-    name: "Augustine",
-    localisation: "Cotonou",
-    disponibilite: "En ligne, À domicile",
-    price: "26,60",
-    star: "4,72",
-    description:
-      "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
-  },
-  {
-    image: Profile3,
-    school: "SCG Business School",
-    name: "Augustine",
-    localisation: "Cotonou",
-    disponibilite: "En ligne, À domicile",
-    price: "26,60",
-    star: "4,72",
-    description:
-      "Diplômée de l’ESCP et ancienne élève de classe préparatoire donne cours d’anglais tous niveaux...",
-  },
-];
+const Allannonces = () => {
+  const { data: allAnnonce, isLoading: loading } = useFetchAllAnnonce();
 
-const AllTutors = () => {
   const formSchema = z.object({
     search: z.string(),
   });
@@ -257,7 +200,7 @@ const AllTutors = () => {
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 pt-6">
+          {/*   <div className="flex flex-col gap-3 pt-6">
             <h2 className="font-medium text-1xl">Disponibilités</h2>
             <div className="space-y-2 pt-2">
               <div className="flex items-center space-x-2">
@@ -288,8 +231,8 @@ const AllTutors = () => {
                 </label>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-3 pt-6">
+          </div> */}
+          {/*    <div className="flex flex-col gap-3 pt-6">
             <h2 className="font-medium text-1xl">Genre</h2>
             <div className="space-y-2 pt-2">
               <div className="flex items-center space-x-2">
@@ -320,25 +263,33 @@ const AllTutors = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="grid xl:grid-cols-3  md:grid-cols-2 col-span-6 sm:grid-cols-2 grid-cols-1 gap-8 xl:px-0 px-2">
-          {tutors.map((tutor, index) => (
-            <Link to={`/tuteurs/${tutor.name}`} key={index} className="hover:bg-card rounded-xl">
+          {allAnnonce?.map((annonce: any, index: any) => (
+            <Link
+              to={`/tuteurs/${annonce?.prenom}`}
+              key={index}
+              className="hover:bg-card rounded-xl h-[480px]"
+            >
               <Card className="border-none shadow-none bg-transparent">
                 <div className="relative">
                   <img
                     className="w-full md:h-[250px] h-full rounded-xl"
-                    src={tutor.image}
-                    alt={tutor.name}
+                    src={annonce?.photo}
+                    alt={annonce?.id}
                   />
                   <div className="absolute top-0 flex justify-between w-full items-center px-4 py-4">
-                    <div className="flex items-center w-44 gap-2 bg-black/80 rounded-full px-1 py-1">
-                      <div className="bg-white rounded-full px-1 py-1">
-                        <School className="w-4 h-4" />
+                    {annonce?.schoolName ? (
+                      <div className="flex items-center w-32 gap-2 bg-black/80 rounded-full px-1 py-1">
+                        <div className="bg-white rounded-full px-1 py-1">
+                          <School className="w-4 h-4" />
+                        </div>
+                        <p className="text-sm text-white">
+                          {annonce?.schoolName}
+                        </p>
                       </div>
-                      <p className="text-sm text-white">{tutor.school}</p>
-                    </div>
+                    ) : null}
                     <div className="bg-black/80 rounded-full px-2 py-2">
                       <Heart className="text-white w-5 h-5" />
                     </div>
@@ -349,33 +300,33 @@ const AllTutors = () => {
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center gap-2">
                         <CardTitle className="text-xl font-bold">
-                          {tutor.name}
+                          {annonce?.prenom}
                         </CardTitle>
                         <HiBadgeCheck className="w-5 h-5" />
                       </div>
                       <p className="text-gray-500 text-sm font-medium">
-                        {tutor.localisation}
+                        Cotonou
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    {/* <div className="flex items-center gap-2">
                       <FaStar className="text-yellow-500 w-5 h-5" />
                       <CardTitle className="text-md">
-                        {tutor.star}{" "}
+                        4/5
                         <span className="text-gray-500">(4 avis)</span>
                       </CardTitle>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="flex flex-col gap-2 pt-3">
                     <CardDescription className="text-gray-700 text-sm">
-                      {tutor.description}
+                      {shortenText(annonce?.introduction, 80)}
                     </CardDescription>
                     <p className="text-gray-500 text-sm font-medium">
-                      {tutor.disponibilite}
+                      {annonce?.lieu}
                     </p>
                   </div>
                   <div className="flex justify-between items-center w-full pt-3">
                     <p className="text-sm">
-                      À partir de <strong>{tutor.price}</strong>{" "}
+                      À partir de <strong>{annonce?.price}</strong>{" "}
                       <strong>€/</strong>{" "}
                       <strong className="text-gray-500">h</strong>
                     </p>
@@ -393,12 +344,12 @@ const AllTutors = () => {
         </div>
       </div>
 
-      <PaginationComponent
+      {/*   <PaginationComponent
             totalPages={2}
             currentPage={1}
             onPageChange={(page) => console.log("Current Page:", page)}
       />
-
+ */}
       <Sheet>
         <div className="md:hidden block">
           <div className="flex justify-center items-center">
@@ -559,4 +510,4 @@ const AllTutors = () => {
   );
 };
 
-export default AllTutors;
+export default Allannonces;

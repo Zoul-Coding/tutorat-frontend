@@ -6,6 +6,7 @@ import axios from "axios";
 import userProfile from "@/services/user.service";
 import { Loader } from "lucide-react";
 import { toast } from "sonner";
+import { mutate } from "swr";
 
 const profileSchema = z.object({
   imageUrl: z
@@ -49,6 +50,7 @@ export const UploadProfilePhoto = () => {
     try {
       const response = await userProfile.uploadProfilePhoto(formData);
       toast.success(response?.message);
+      mutate("fetch_info_user");
     } catch (error: any) {
       console.error(error);
       const errorMessage = error?.message || error;
@@ -102,12 +104,11 @@ export const UploadProfilePhoto = () => {
         <button
           disabled={isSubmitting}
           type="submit"
-          className="mt-4 w-full py-2 bg-primary text-white rounded hover:opacity-85"
+          className="flex justify-center items-center mt-4 w-full py-2 bg-primary text-white rounded hover:opacity-85"
         >
           {isSubmitting ? (
             <>
-              <Loader className="text-white mr-2 h-5 w-5 animate-spin" />
-              Ajout...
+              <Loader className="text-white h-5 w-5 animate-spin" />
             </>
           ) : (
             "Ajouter"

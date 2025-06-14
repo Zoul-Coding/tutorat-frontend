@@ -30,6 +30,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import experienceService from "@/services/experience.service";
+import useFetchInfoUser from "@/requests/useFetchUserInfos";
+import { toast } from "sonner";
+import { Loader } from "lucide-react";
+import { mutate } from "swr";
 
 const months = [
   "janvier",
@@ -61,9 +66,8 @@ const years = Array.from({ length: 2035 - 1960 + 1 }, (_, i) =>
 );
 
 const FormSchema = z.object({
-  schoolName: z.string().min(2, "Champ requis"),
-  degree: z.string().min(2, "Champ requis"),
-  field: z.string().min(2, "Champ requis"),
+  title: z.string().min(5, "L'intitulé du poste doit contenir au moins 5 mots"),
+  type: z.string().min(1, "Champ requis"),
   startMonth: z.string(),
   startYear: z.string(),
   endMonth: z.string(),
@@ -73,12 +77,15 @@ const FormSchema = z.object({
 
 export function ExperienceSheet() {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: userInfos } = useFetchInfoUser();
+  const userId = userInfos?._id;  
+
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      schoolName: "",
-      degree: "",
-      field: "",
+      title: "",
+      type: "",
       startMonth: "",
       startYear: "",
       endMonth: "",
@@ -87,9 +94,30 @@ export function ExperienceSheet() {
     },
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Soumis:", data);
-    setOpen(false);
+  type ExperienceFormData = z.infer<typeof FormSchema>;
+
+  const onSubmit = async (data: ExperienceFormData) => {
+    setIsSubmitting(true);
+
+    try {
+
+      const payload = {
+      ...data,
+      userId: userId,
+    };
+
+      const response = await experienceService.createExperience(payload);
+      toast.success(response?.message);
+      form.reset();
+      /*  mutate("fetch_user_annonce"); */
+      setOpen(false);
+    } catch (error: any) {
+      console.error(error);
+      const errorMessage = error?.message || error;
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -99,23 +127,20 @@ export function ExperienceSheet() {
           Ajouter
         </Button>
       </SheetTrigger>
-      <SheetContent
-        style={{ maxWidth: "40vw" }}
-        className=" bg-white py-0"
-      >
+      <SheetContent style={{ maxWidth: "40vw" }} className=" bg-white py-0">
         <SheetHeader className="fixed w-full py-4 bg-white z-10">
           <SheetTitle>Expériences professionnelles 🏢</SheetTitle>
         </SheetHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="overflow-auto space-y-6 pt-10"
+            className="overflow-auto max-h-screen space-y-6 pt-10 pb-10"
           >
             <div className="flex flex-col gap-4">
               <p className="text-sm font-bold">Intitulé du poste</p>
               <FormField
                 control={form.control}
-                name="schoolName"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Intitulé du poste</FormLabel>
@@ -132,7 +157,7 @@ export function ExperienceSheet() {
               />
               <FormField
                 control={form.control}
-                name="startMonth"
+                name="type"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Type d'emploi</FormLabel>
@@ -205,7 +230,68 @@ export function ExperienceSheet() {
                           <SelectTrigger className="rounded border border-gray-400">
                             <SelectValue placeholder="Année" />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-white">
+                            {years.map((y) => (
+                              <SelectItem key={y} value={y}>
+                                {y}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-bold pb-4">
+                Dates de fin d'occupation du poste
+              </p>
+              <p className="text-sm font-medium pb-2">Date de début</p>
+              <div className="grid grid-cols-2 gap-4 items-center">
+                <FormField
+                  control={form.control}
+                  name="endMonth"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="rounded border border-gray-400">
+                            <SelectValue placeholder="Mois" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
+                            {months.map((m) => (
+                              <SelectItem key={m} value={m}>
+                                {m}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="endYear"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <SelectTrigger className="rounded border border-gray-400">
+                            <SelectValue placeholder="Année" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white">
                             {years.map((y) => (
                               <SelectItem key={y} value={y}>
                                 {y}
@@ -245,10 +331,17 @@ export function ExperienceSheet() {
             </div>
 
             <Button
+              disabled={isSubmitting}
               className="text-white rounded hover:opacity-85"
               type="submit"
             >
-              Créer
+              {isSubmitting ? (
+                <>
+                  <Loader className="texte white h-5 w-5 animate-spin" />
+                </>
+              ) : (
+                " Créer"
+              )}
             </Button>
           </form>
         </Form>
