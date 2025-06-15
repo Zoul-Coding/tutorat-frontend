@@ -61,7 +61,7 @@ export default function Register() {
   }
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div className="bg-hero-gradient flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-xl p-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold mt-4">Rejoins-nous !</h1>

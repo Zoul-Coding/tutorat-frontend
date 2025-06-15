@@ -38,7 +38,7 @@ const TutorsProfileDescription = () => {
       ) : (
         <div className="grid grid-cols-8 gap-12">
           <div className="flex flex-col gap-12 col-span-6">
-            <div className="bg-gray-50 rounded px-8 py-8">
+            <div className="bg-blue-100 rounded px-8 py-8">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
                   <h2 className="text-4xl font-bold">
@@ -55,14 +55,14 @@ const TutorsProfileDescription = () => {
 
                 <div className="flex items-center gap-4">
                   {showAnnonce?.annonce?.lieu === "À domicile" ? (
-                    <div className="bg-gray-200 rounded flex items-center gap-2 px-2 py-1">
+                    <div className="bg-white rounded flex items-center gap-2 px-2 py-1">
                       <HiLocationMarker className="w-4 h-4" />
                       <p className="text-sm font-medium text-gray-600">
                         A domicile
                       </p>
                     </div>
                   ) : (
-                    <div className="bg-gray-200 rounded flex items-center gap-2 px-2 py-1">
+                    <div className="bg-white rounded flex items-center gap-2 px-2 py-1">
                       <MdVideocam className="w-4 h-4" />
                       <p className="text-sm font-medium text-gray-600">
                         En ligne
@@ -142,7 +142,7 @@ const TutorsProfileDescription = () => {
               </div>
             </div>
           </div> */}
-            <div className="border border-gray-200 rounded-xl px-8 py-8">
+            <div className="border border-gray-200 bg-gray-50 rounded-xl px-8 py-8">
               <h2 className="text-3xl font-bold">À propos</h2>
               <ShowMoreText
                 className="pt-4 text-md"
@@ -150,7 +150,7 @@ const TutorsProfileDescription = () => {
                 maxChars={420}
               />
             </div>
-            <div className="border border-gray-200 rounded-xl px-8 py-8">
+            <div className="border border-gray-200 bg-gray-50 rounded-xl px-8 py-8">
               <h2 className="text-3xl font-bold">Méthodologie</h2>
               <ShowMoreText
                 className="pt-4 text-md"
@@ -171,7 +171,7 @@ const TutorsProfileDescription = () => {
                 </div>
               </div>
             </div>
-            <div className="border border-gray-200 rounded-xl px-8 py-8">
+            <div className="border border-gray-200 bg-gray-50 rounded-xl px-8 py-8">
               <h2 className="text-3xl font-bold">Diplômes</h2>
               {showAnnonce?.certificates?.map(
                 (certificate: any, index: any) => (
@@ -197,7 +197,7 @@ const TutorsProfileDescription = () => {
                 )
               )}
             </div>
-            <div className="border border-gray-200 rounded-xl px-8 py-8">
+            <div className="border border-gray-200 bg-gray-50 rounded-xl px-8 py-8">
               <h2 className="text-3xl font-bold">
                 Expériences professionnelles
               </h2>

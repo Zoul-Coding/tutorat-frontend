@@ -11,6 +11,16 @@ export function getToken() {
   return token;
 }
 
+export function getUser() {
+  const user = localStorage.getItem("user");
+  return user;
+}
+
+export function getUserName() {
+  const user = localStorage.getItem("userName");
+  return user;
+}
+
 export function deleteToken() {
   const token = Cookies.remove("token");
   return token;

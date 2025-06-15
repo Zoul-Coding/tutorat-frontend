@@ -3,10 +3,7 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'Times New Roman';
-  src: url('/public/Fonts/times-new-roman.ttf') format('truetype');
-  font-style: normal;
-  font-display: swap;
+   font-family: "Montserrat", sans-serif;
 }
 
 @layer base {

@@ -64,7 +64,7 @@ export function OtpVerification() {
 
   return (
     <Form {...form}>
-      <div className="bg-gray-100 flex items-center justify-center h-screen">
+      <div className="bg-hero-gradient flex items-center justify-center h-screen">
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="bg-white space-y-6 px-6 py-6 rounded-xl w-[440px]"

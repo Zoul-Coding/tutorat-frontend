@@ -40,7 +40,7 @@ const Challenge = () => {
       </div>
       <div className="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-8 pt-16 xl:px-0 md:px-12 px-2">
         {challenges.map((challenge, index) => (
-          <Card className="border-none shadow-none bg-card rounded-xl px-8 py-8" key={index}>
+          <Card className="border-none shadow-none bg-blue-100 rounded-xl px-8 py-8" key={index}>
             <div className="text-3xl">{challenge.image}</div>
             <div className="flex flex-col gap-6 pt-6">
               <CardTitle className="md:text-3xl text-2xl font-bold">{challenge.title}</CardTitle>

@@ -43,8 +43,8 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="md:pt-28 pt-20 xl:px-0 px-2">
-      <div className="max-w-screen-xl mx-auto bg-hero-gradient rounded-3xl bg-cover w-full xl:px-0 px-6 md:py-16 py-10">
+    <section className="">
+      <div className="bg-hero-gradient bg-cover w-full xl:px-0 px-6 md:py-40 py-10">
         <div className="flex flex-col justify-center items-center gap-6 text-center">
           <h1 className="text-white font-bold md:text-5xl text-3xl md:w-[50%]">
             Trouve le bon tuteur pour réussir !︎

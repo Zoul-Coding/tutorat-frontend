@@ -6,9 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import FormAnnonces from "./FormAnnonces";
 import useFetchUserAnnonce from "@/requests/useFetchUserAnnonce";
+import FormUpdateAnnonce from "./FormUpdateAnnonce";
+import DeleteAnnonceDialog from "./DeleteAnnonceDilaog";
 
 export default function Annonces() {
   const [open, setOpen] = useState(false);
+  const [openSheet, setOpenSheet] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedAnnonceId, setSelectedAnnonceId] = useState(null);
   const { data: annonceData, isLoading: loading } = useFetchUserAnnonce();
 
   const toggleActive = (id: any) => {
@@ -48,7 +53,7 @@ export default function Annonces() {
           {annonceData?.map((annonce: any) => (
             <Card
               key={annonce.id}
-              className="border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+              className="border border-gray-300 shadow-sm hover:shadow-md transition-shadow"
             >
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -87,6 +92,10 @@ export default function Annonces() {
                           <div className="flex items-center gap-4">
                             <div className="flex items-center gap-6">
                               <Button
+                                onClick={() => {
+                                  setSelectedAnnonceId(annonce?.id);
+                                  setOpenSheet(true);
+                                }}
                                 variant="outline"
                                 size="sm"
                                 className="text-gray-600 rounded hover:text-gray-800 border-gray-300 hover:border-gray-400"
@@ -96,6 +105,10 @@ export default function Annonces() {
                               </Button>
 
                               <Button
+                               onClick={() => {
+                                  setSelectedAnnonceId(annonce?.id);
+                                  setOpenDialog(true);
+                                }}
                                 variant="outline"
                                 size="sm"
                                 className="text-red-600 rounded hover:text-red-700 border-red-300 hover:border-red-400"
@@ -156,6 +169,17 @@ export default function Annonces() {
           </div>
         </div>
       )}
+
+      <FormUpdateAnnonce
+        openSheet={openSheet}
+        setOpenSheet={setOpenSheet}
+        annonceId={selectedAnnonceId}
+      />
+      <DeleteAnnonceDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        annonceId={selectedAnnonceId}
+      />
     </div>
   );
 }

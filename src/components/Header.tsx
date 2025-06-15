@@ -29,7 +29,7 @@ const Header = () => {
   ];
 
   return (
-    <section className="fixed bg-white w-full z-50 transition-all duration-300 shadow-md">
+    <section className="fixed bg-white w-full z-50 transition-all duration-300 shadow-sm">
       <div className="max-w-screen-xl mx-auto xl:px-0 xl:pt-0 px-2">
         <div className="hidden md:block">
           <div className="flex items-center justify-between">

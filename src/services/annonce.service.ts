@@ -49,6 +49,52 @@ class AnnonceService {
       throw error.response?.data.message || error.message;
     }
   }
+
+  async getAnnonceById(id:string) {
+    const token = getToken();
+
+    try {
+      const response = await api.get(`/get-annonce/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error.response?.data.message || error.message;
+    }
+  }
+
+async updateAnnonce(id: string, data: any) {
+  const token = getToken();
+
+  try {
+    const response = await api.put(`/update-annonce/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data.message || error.message;
+  }
+}
+
+async deleteAnnonce(id: string) {
+  const token = getToken();
+
+  try {
+    const response = await api.delete(`/delete-annonce/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data.message || error.message;
+  }
+}
 }
 
 export default new AnnonceService();
